@@ -30,6 +30,7 @@ export interface CreateNotePayload {
   tag: string;
 }
 
+// 1. Отримання списку нотаток
 export async function fetchNotes(
   params: FetchNotesParams = {}
 ): Promise<FetchNotesResponse> {
@@ -42,21 +43,30 @@ export async function fetchNotes(
   return response.data;
 }
 
+// 2. Створення нотатки
 export async function createNote(payload: CreateNotePayload): Promise<Note> {
-  const response = await axiosInstance.post<Note> ("/notes", payload);
+  const response = await axiosInstance.post<Note>("/notes", payload);
   return response.data;
 }
 
+// 3. Видалення нотатки
 export async function deleteNote(id: string): Promise<Note> {
   const response = await axiosInstance.delete<Note>(`/notes/${id}`);
   return response.data;
 }
 
+// 4. Отримання ОДНІЄЇ нотатки за її id (Додано для TanStack Query)
 export async function fetchNoteById(id: string): Promise<Note> {
   const response = await axiosInstance.get<Note>(`/notes/${id}`);
   return response.data;
 }
 
+// Групуємо всі методи в один сервіс для зручності (опціонально)
+export const noteService = {
+  fetchNotes,
+  createNote,
+  deleteNote,
+  fetchNoteById,
+};
 
-export const noteService = fetchNotes;
 

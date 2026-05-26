@@ -1,19 +1,15 @@
-
 'use client';
 
-interface ErrorProps {
+interface Props {
   error: Error & { digest?: string };
   reset: () => void;
 }
 
-export default function NoteDetailsError({ error, reset }: ErrorProps) {
-  return (
-    <div>
-      <p>Could not fetch note details. {error.message}</p>
-      <button onClick={() => reset()}>Try again</button>
-    </div>
-  );
+export default function NoteError({ error }: Props) {
+  return <p>Could not fetch note details. {error.message}</p>;
 }
+
+
 
 
 
