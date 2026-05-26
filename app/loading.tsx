@@ -1,22 +1,12 @@
-import type { Metadata } from 'next';
-import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
-
-
-export const metadata: Metadata = {
-  title: 'Notes App',
+'use client';
+const Loading = () => {
+  return <p>Loading, please wait...</p>;
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>
-        <TanStackProvider>
-          {children}
-        </TanStackProvider>
-      </body>
-    </html>
-  );
-}
+export default Loading;
+
+
+
 
 
 
