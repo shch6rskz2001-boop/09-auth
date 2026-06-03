@@ -13,14 +13,15 @@ import Sidebar from "../../../../components/SidebarNotes/SidebarNotes";
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function App() {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+interface NotesProps {
+  tag?: string;
+}
 
-  const searchParams = useSearchParams();
-  const tag = searchParams.get('tag') ?? undefined;
+export default function Notes({ tag }: NotesProps) {
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
     setDebouncedSearch(value);
@@ -33,7 +34,7 @@ export default function App() {
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notes", page, debouncedSearch, tag],
+    queryKey: ['notes', page, debouncedSearch, tag],
     queryFn: () =>
       fetchNotes({
         page,
@@ -51,11 +52,9 @@ export default function App() {
     <div className={css.app}>
       <div className={css.layout}>
         <Sidebar />
-
         <div className={css.content}>
           <div className={css.toolbar}>
             <SearchBox value={search} onChange={handleSearchChange} />
-
             {totalPages > 1 && (
               <Pagination
                 totalPages={totalPages}
@@ -63,30 +62,18 @@ export default function App() {
                 onPageChange={setPage}
               />
             )}
-
-            <button
-              className={css.button}
-              onClick={() => setIsModalOpen(true)}
-            >
+            <button className={css.button} onClick={() => setIsModalOpen(true)}>
               Create note +
             </button>
           </div>
-
           {isLoading && <p className={css.status}>Loading notes…</p>}
-          {isError && (
-            <p className={css.status}>
-              Something went wrong. Check your token in <code>.env</code>.
-            </p>
-          )}
-
+          {isError && <p className={css.status}>Something went wrong.</p>}
           {notes.length > 0 && <NoteList notes={notes} />}
-
           {!isLoading && !isError && notes.length === 0 && (
             <p className={css.status}>No notes found.</p>
           )}
         </div>
       </div>
-
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <NoteForm onClose={() => setIsModalOpen(false)} />

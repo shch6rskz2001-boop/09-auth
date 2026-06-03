@@ -1,35 +1,31 @@
-import NoteList from '@/components/NoteList/NoteList';
-
-async function getFilteredNotes(tag?: string) {
-  const query = new URLSearchParams();
-  query.set('perPage', '50');
-  if (tag && tag !== 'all') query.set('tag', tag);
-
-  const res = await fetch(
-    `https://notehub-public-api.goit.global/notes?${query.toString()}`,
-    {
-      cache: 'no-store',
-      headers: {
-        Authorization: `Bearer ${process.env.NOTEHUB_TOKEN}`,
-      },
-    }
-  );
-  if (!res.ok) throw new Error('Failed to fetch notes');
-  return res.json();
-}
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { fetchNotes } from '@/lib/api';
+import NotesClient from './Notes.client';
 
 export default async function FilteredNotesPage({
   params,
 }: {
-  params: { tag?: string[] };
+  params: { slug?: string[] };
 }) {
-  const tag = params.tag?.[0];
-  const data = await getFilteredNotes(tag);
-  const notes = data.notes ?? [];
+  const tag = params.slug?.[0];
+  const resolvedTag = tag === 'all' ? undefined : tag;
 
-  return notes.length > 0 ? (
-    <NoteList notes={notes} />
-  ) : (
-    <p>No notes found.</p>
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['notes', 1, '', resolvedTag],
+    queryFn: () =>
+      fetchNotes({
+        page: 1,
+        perPage: 12,
+        search: undefined,
+        tag: resolvedTag,
+      }),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+     <NotesClient tag={resolvedTag} />
+    </HydrationBoundary>
   );
 }
