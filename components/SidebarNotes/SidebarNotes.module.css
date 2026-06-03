@@ -1,10 +1,9 @@
 .sidebar {
   background-color: #2f2f2f;
   width: 220px;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 80px);
   padding-top: 16px;
 }
-
 
 .menuList {
   list-style-type: none;
@@ -13,25 +12,25 @@
 }
 
 .menuItem {
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
 
 .menuLink {
   text-decoration: none;
-  color: white;
+  color: rgba(255, 255, 255, 0.65);
   font-size: 16px;
   display: block;
-  padding: 8px 16px;
-  transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .menuLink:hover {
   background-color: #444;
-  color: #ddd;
+  color: #fff;
 }
 
 .active {
-  color: white;
+  color: #fff;
   font-weight: 600;
+  background-color: #444;
 }
-

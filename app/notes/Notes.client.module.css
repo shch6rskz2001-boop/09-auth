@@ -2,24 +2,31 @@
   width: 100%;
   min-height: calc(100vh - 140px);
   background-color: #f8f9fa;
-  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .toolbar {
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto 24px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  padding: 16px 24px;
+  background-color: #f8f9fa;
+}
+
+.layout {
+  width: 100%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 220px 1fr;
 }
 
 .content {
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+  padding: 24px;
+  background-color: #f8f9fa;
 }
 
 .status {
@@ -42,34 +49,4 @@
 
 .button:hover {
   background-color: #0b5ed7;
-}
-
-.layout {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 24px;
-}
-
-.content {
-  width: 100%;
-}
-
-.layout {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 24px;
-
-  align-items: start;
-}
-
-.content {
-  width: 100%;
 }
