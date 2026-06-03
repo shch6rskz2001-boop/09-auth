@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <header className={css.header}>
       <div className={css.container}>
-        <Link href="/" className={css.logo} aria-label="Home">
+        <Link href="/" className={css.logo}>
           NoteHub
         </Link>
 

@@ -10,6 +10,7 @@ import Pagination from "../../components/Pagination/Pagination";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import Sidebar from "../../components/SidebarNotes/SidebarNotes";
 
 export default function App() {
   const [page, setPage] = useState(1);
@@ -68,7 +69,13 @@ export default function App() {
         </p>
       )}
 
-      {notes.length > 0 && <NoteList notes={notes} />}
+           <div className={css.layout}>
+            <Sidebar />
+
+            <div className={css.content}>
+              {notes.length > 0 && <NoteList notes={notes} />}
+            </div>
+          </div>
 
       {!isLoading && !isError && notes.length === 0 && (
         <p className={css.status}>No notes found.</p>

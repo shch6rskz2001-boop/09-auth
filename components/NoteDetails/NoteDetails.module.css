@@ -1,68 +1,73 @@
 .main {
-    width: 100vw; /* Розтягує на всю ширину екрана */
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%); /* Примусово центрує відносно всього екрана */
-    background-color: #f8f9fa; /* Сірий фон навколо */
-    padding: 40px 0;
-    box-sizing: border-box;
+  flex: 1;
 }
 
 .container {
-    width: 90%;
-    max-width: 760px; /* Ширина картки як на зразку */
-    margin: 0 auto; /* Центрує саму білу картку всередині сірої зони */
-    background-color: #ffffff; /* Біла картка */
-    border-radius: 6px;
-    border: 1px solid #e9ecef;
-    padding: 40px; /* Великі відступи всередині */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-    box-sizing: border-box;
+  max-width: 800px;
+  margin: 32px auto;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .item {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    border-bottom: 1px solid #e9ecef;
-    padding-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
 }
 
 .header h2 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-    color: #212529;
+  margin: 0;
+  font-size: 28px;
+  color: #333;
 }
 
 .content {
-    font-size: 16px;
-    line-height: 24px;
-    color: #495057;
-    white-space: pre-wrap;
+  font-size: 18px;
+  line-height: 26px;
+  color: #444;
+  white-space: pre-wrap;
 }
 
 .date {
-    font-size: 12px;
-    color: #6c757d;
-    text-align: right;
-    margin-top: 16px;
+  font-size: 14px;
+  color: #888;
+  text-align: right;
 }
 
 .tag {
-    display: inline-block;
-    padding: 6px 16px;
-    font-size: 12px;
-    color: #0d6efd;
-    background-color: #e7f1ff;
-    border: 1px solid #b6d4fe;
-    border-radius: 20px;
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #0d6efd;
+  background-color: #e7f1ff;
+  border: 1px solid #b6d4fe;
+  border-radius: 12px;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.backBtn {
+  align-self: flex-start;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: underline;
+  display: inline-block;
+  background-color: transparent;
 }
 

@@ -1,44 +1,42 @@
-/* Контейнер сторінки: робить фон сірим і центрує вміст */
 .app {
   width: 100%;
-  min-height: calc(100vh - 140px); /* розтягує на всю висоту між шапкою і підвалом */
-  background-color: #f8f9fa; /* сірий фон для всієї сторінки */
-  padding: 40px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* центрує картку по горизонталі */
+  min-height: calc(100vh - 140px);
+  background-color: #f8f9fa;
+  padding: 40px 24px;
 }
 
-/* Верхня панель (інструменти), якщо вона є на сторінці */
 .toolbar {
   width: 100%;
-  max-width: 760px;
-  margin-bottom: 16px;
+  max-width: 1280px;
+  margin: 0 auto 24px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 
-
-.noteCard {
-  background-color: #ffffff; 
-  border-radius: 8px; 
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
-  padding: 40px; 
+.content {
   width: 100%;
-  max-width: 760px; 
-  box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
-/* Кнопка */
+.status {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 24px;
+}
+
 .button {
-  padding: 6px 12px;
+  padding: 8px 16px;
   font-size: 16px;
   color: #fff;
   background-color: #0d6efd;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  white-space: nowrap;
   transition: background-color 0.2s ease;
 }
 
@@ -46,4 +44,30 @@
   background-color: #0b5ed7;
 }
 
+.layout {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
 
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+}
+
+.content {
+  width: 100%;
+}
+
+.layout {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+}
+
+.content {
+  width: 100%;
+}
