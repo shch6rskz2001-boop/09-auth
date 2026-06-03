@@ -5,9 +5,10 @@ import NotesClient from './Notes.client';
 export default async function FilteredNotesPage({
   params,
 }: {
-  params: { slug?: string[] };
+  params: Promise<{ slug: string[] }>; // ← змінено
 }) {
-  const tag = params.slug?.[0];
+  const { slug } = await params; // ← додано await
+  const tag = slug?.[0];
   const resolvedTag = tag === 'all' ? undefined : tag;
 
   const queryClient = new QueryClient();
@@ -25,7 +26,7 @@ export default async function FilteredNotesPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-     <NotesClient tag={resolvedTag} />
+      <NotesClient tag={resolvedTag} />
     </HydrationBoundary>
   );
 }

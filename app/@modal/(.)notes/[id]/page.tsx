@@ -1,24 +1,24 @@
-import NoteDetailsModal from '@/components/NoteDetails/NoteDetailsModal';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { fetchNoteById } from '@/lib/api';
+import NotePreview from './NotePreview.client';
 
-async function getNote(id: string) {
-  const res = await fetch(
-    `https://notehub-public-api.goit.global/notes/${id}`,
-    {
-      cache: 'no-store',
-      headers: {
-        Authorization: `Bearer ${process.env.NOTEHUB_TOKEN}`,
-      },
-    }
-  );
-  if (!res.ok) throw new Error('Failed to fetch note');
-  return res.json();
-}
 
 export default async function InterceptedNotePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const note = await getNote(params.id);
-  return <NoteDetailsModal note={note} />;
+  const { id } = await params;
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['note', id],
+    queryFn: () => fetchNoteById(id),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NotePreview />
+    </HydrationBoundary>
+  );
 }
