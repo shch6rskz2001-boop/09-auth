@@ -1,45 +1,37 @@
+'use client'; // ← додано
+
 import Link from "next/link";
+import { useSearchParams } from 'next/navigation'; // ← додано
 import css from "./SidebarNotes.module.css";
 
+const tags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
+
 export default function Sidebar() {
+  const searchParams = useSearchParams(); // ← додано
+  const currentTag = searchParams.get('tag'); // ← додано
+
   return (
     <aside className={css.sidebar}>
       <ul className={css.menuList}>
         <li className={css.menuItem}>
-          <Link href="/notes" className={css.menuLink}>
+          <Link
+            href="/notes"
+            className={`${css.menuLink} ${currentTag === null ? css.active : ''}`}
+          >
             All notes
           </Link>
         </li>
 
-        <li className={css.menuItem}>
-          <Link href="/notes?tag=Todo" className={css.menuLink}>
-            Todo
-          </Link>
-        </li>
-
-        <li className={css.menuItem}>
-          <Link href="/notes?tag=Work" className={css.menuLink}>
-            Work
-          </Link>
-        </li>
-
-        <li className={css.menuItem}>
-          <Link href="/notes?tag=Personal" className={css.menuLink}>
-            Personal
-          </Link>
-        </li>
-
-        <li className={css.menuItem}>
-          <Link href="/notes?tag=Meeting" className={css.menuLink}>
-            Meeting
-          </Link>
-        </li>
-
-        <li className={css.menuItem}>
-          <Link href="/notes?tag=Shopping" className={css.menuLink}>
-            Shopping
-          </Link>
-        </li>
+        {tags.map((tag) => (
+          <li key={tag} className={css.menuItem}>
+            <Link
+              href={`/notes?tag=${tag}`}
+              className={`${css.menuLink} ${currentTag === tag ? css.active : ''}`}
+            >
+              {tag}
+            </Link>
+          </li>
+        ))}
       </ul>
     </aside>
   );

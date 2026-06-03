@@ -1,22 +1,26 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchNotes  } from '@/lib/api';
-import css from "./Notes.client.module.css"
+import { fetchNotes } from '@/lib/api';
+import { useSearchParams } from 'next/navigation'; // ← додано
+import css from "./Notes.client.module.css";
 import NoteList from "../../components/NoteList/NoteList";
 import Modal from "../../components/Modal/Modal";
 import NoteForm from "../../components/NoteForm/NoteForm";
 import Pagination from "../../components/Pagination/Pagination";
 import SearchBox from "../../components/SearchBox/SearchBox";
+import Sidebar from "../../components/SidebarNotes/SidebarNotes";
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import Sidebar from "../../components/SidebarNotes/SidebarNotes";
 
 export default function App() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const searchParams = useSearchParams(); // ← додано
+  const tag = searchParams.get('tag') ?? undefined; // ← додано
 
   const debouncedSetSearch = useDebouncedCallback((value: string) => {
     setDebouncedSearch(value);
@@ -27,13 +31,15 @@ export default function App() {
     setSearch(value);
     debouncedSetSearch(value);
   };
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notes", page, debouncedSearch],
+    queryKey: ["notes", page, debouncedSearch, tag], // ← додано tag
     queryFn: () =>
       fetchNotes({
         page,
         perPage: 12,
         search: debouncedSearch,
+        tag, // ← додано
       }),
     placeholderData: (previousData) => previousData,
   });
@@ -69,13 +75,13 @@ export default function App() {
         </p>
       )}
 
-           <div className={css.layout}>
-            <Sidebar />
+      <div className={css.layout}>
+        <Sidebar />
 
-            <div className={css.content}>
-              {notes.length > 0 && <NoteList notes={notes} />}
-            </div>
-          </div>
+        <div className={css.content}>
+          {notes.length > 0 && <NoteList notes={notes} />}
+        </div>
+      </div>
 
       {!isLoading && !isError && notes.length === 0 && (
         <p className={css.status}>No notes found.</p>
