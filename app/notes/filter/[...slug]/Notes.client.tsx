@@ -2,14 +2,14 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchNotes } from '@/lib/api';
-import { useSearchParams } from 'next/navigation';
 import css from "./Notes.client.module.css";
+
 import NoteList from "../../../../components/NoteList/NoteList";
 import Modal from "../../../../components/Modal/Modal";
 import NoteForm from "../../../../components/NoteForm/NoteForm";
 import Pagination from "../../../../components/Pagination/Pagination";
 import SearchBox from "../../../../components/SearchBox/SearchBox";
-import Sidebar from "../../../../components/SidebarNotes/SidebarNotes";
+
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -42,7 +42,7 @@ export default function Notes({ tag }: NotesProps) {
         search: debouncedSearch,
         tag,
       }),
-    placeholderData: (previousData) => previousData,
+    placeholderData: (prev) => prev,
   });
 
   const notes = data?.notes ?? [];
@@ -51,10 +51,12 @@ export default function Notes({ tag }: NotesProps) {
   return (
     <div className={css.app}>
       <div className={css.layout}>
-        <Sidebar />
+        {/* ❌ Sidebar ВИДАЛЕНО */}
+
         <div className={css.content}>
           <div className={css.toolbar}>
             <SearchBox value={search} onChange={handleSearchChange} />
+
             {totalPages > 1 && (
               <Pagination
                 totalPages={totalPages}
@@ -62,18 +64,26 @@ export default function Notes({ tag }: NotesProps) {
                 onPageChange={setPage}
               />
             )}
-            <button className={css.button} onClick={() => setIsModalOpen(true)}>
+
+            <button
+              className={css.button}
+              onClick={() => setIsModalOpen(true)}
+            >
               Create note +
             </button>
           </div>
+
           {isLoading && <p className={css.status}>Loading notes…</p>}
           {isError && <p className={css.status}>Something went wrong.</p>}
+
           {notes.length > 0 && <NoteList notes={notes} />}
+
           {!isLoading && !isError && notes.length === 0 && (
             <p className={css.status}>No notes found.</p>
           )}
         </div>
       </div>
+
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <NoteForm onClose={() => setIsModalOpen(false)} />
