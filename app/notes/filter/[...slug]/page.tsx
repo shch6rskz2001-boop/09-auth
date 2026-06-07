@@ -1,13 +1,32 @@
+import type { Metadata } from 'next';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { fetchNotes } from '@/lib/api';
+import { fetchNotes } from '../../../../lib/api';
 import NotesClient from './Notes.client';
 
-export default async function FilteredNotesPage({
-  params,
-}: {
-  params: Promise<{ slug: string[] }>; // ← змінено
-}) {
-  const { slug } = await params; // ← додано await
+type Props = {
+  params: Promise<{ slug: string[] }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const tag = slug?.[0] ?? 'all';
+  const title = `Нотатки: ${tag} | NoteHub`;
+  const description = `Перегляд нотаток з фільтром «${tag}» у застосунку NoteHub.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://your-domain.vercel.app/notes/filter/${slug.join('/')}`,
+      images: ['https://ac.goit.global/fullstack/react/notehub-og-meta.jpg'],
+    },
+  };
+}
+
+export default async function FilteredNotesPage({ params }: Props) {
+  const { slug } = await params;
   const tag = slug?.[0];
   const resolvedTag = tag === 'all' ? undefined : tag;
 
