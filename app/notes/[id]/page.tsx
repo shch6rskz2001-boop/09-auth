@@ -1,23 +1,49 @@
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { fetchNoteById } from '@/lib/api';
-import NoteDetailsClient from './NoteDetails.client';
+import type { Metadata } from 'next';
+import { Roboto } from 'next/font/google';
+import './globals.css';
+import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
+import TanStackProvider from '../../../components/TanStackProvider/TanStackProvider';
 
-interface Props {
-  params: Promise<{ id: string }>;
-}
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  variable: '--font-roboto',
+  display: 'swap',
+  subsets: ['latin'],
+});
 
-export default async function NoteDetailsPage({ params }: Props) {
-  const { id } = await params;
-  const queryClient = new QueryClient();
+export const metadata: Metadata = {
+  title: 'NoteHub',
+  description: 'NoteHub — зручний застосунок для створення та керування нотатками.',
+  openGraph: {
+    title: 'NoteHub',
+    description: 'NoteHub — зручний застосунок для створення та керування нотатками.',
+    url: 'https://08-zustand-qcem.vercel.app',
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+      },
+    ],
+  },
+};
 
-  await queryClient.prefetchQuery({
-    queryKey: ['note', id],
-    queryFn: () => fetchNoteById(id),
-  });
-
+export default function RootLayout({
+  children,
+  modal,
+}: Readonly<{
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}>) {
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <NoteDetailsClient id={id} />
-    </HydrationBoundary>
+    <html lang="en" className={roboto.variable}>
+      <body>
+        <TanStackProvider>
+          <Header />
+          <main>{children}</main>
+          {modal}
+          <Footer />
+        </TanStackProvider>
+      </body>
+    </html>
   );
 }

@@ -14,31 +14,15 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: 'NoteHub',
-  description: 'NoteHub — зручний застосунок для створення та керування нотатками.',
+  description: 'NoteHub is a convenient app for creating and managing notes.',
   openGraph: {
     title: 'NoteHub',
-    description: 'NoteHub — зручний застосунок для створення та керування нотатками.',
-    images: ['https://ac.goit.global/fullstack/react/notehub-og-meta.jpg'],
+    description: 'NoteHub is a convenient app for creating and managing notes.',
+    url: 'https://08-zustand-qcem.vercel.app',
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+      },
+    ],
   },
 };
-
-export default function RootLayout({
-  children,
-  modal,
-}: Readonly<{
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className={roboto.variable}>
-      <body>
-        <TanStackProvider>
-          <Header />
-          <main>{children}</main>
-          {modal}
-          <Footer />
-        </TanStackProvider>
-      </body>
-    </html>
-  );
-}
