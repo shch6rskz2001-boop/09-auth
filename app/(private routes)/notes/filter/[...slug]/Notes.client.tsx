@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { fetchNotes } from '../../../../lib/api';
+import { fetchNotes } from '@/lib/api/clientApi';
 import css from './Notes.client.module.css';
-import NoteList from '../../../../components/NoteList/NoteList';
-import Pagination from '../../../../components/Pagination/Pagination';
-import SearchBox from '../../../../components/SearchBox/SearchBox';
+import NoteList from '../../../../../components/NoteList/NoteList';
+import Pagination from '../../../../../components/Pagination/Pagination';
+import SearchBox from '../../../../../components/SearchBox/SearchBox';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 

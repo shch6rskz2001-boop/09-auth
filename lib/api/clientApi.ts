@@ -1,19 +1,12 @@
 import api from './api';
 import { User } from '@/types/user';
+import type { Note } from '@/types/note';
 
 export interface FetchNotesParams {
   page?: number;
   perPage?: number;
   search?: string;
   tag?: string;
-}
-
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  tag: string;
-  createdAt: string;
 }
 
 export interface NotesResponse {
