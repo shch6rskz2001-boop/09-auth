@@ -15,7 +15,7 @@ export async function proxy(request: NextRequest) {
   const refreshToken = cookieStore.get('refreshToken')?.value;
 
   let isAuthenticated = false;
-  let newCookieHeader: string | null = null;
+  const newCookies: { name: string; value: string }[] = [];
 
   if (accessToken) {
     isAuthenticated = true;
@@ -31,7 +31,18 @@ export async function proxy(request: NextRequest) {
       if (response.ok) {
         const data = await response.json().catch(() => null);
         isAuthenticated = !!data;
-        newCookieHeader = response.headers.get('set-cookie');
+
+        const setCookieHeader = response.headers.get('set-cookie');
+        if (setCookieHeader) {
+          const cookiePairs = setCookieHeader.split(',').map((c) => c.trim());
+          for (const cookie of cookiePairs) {
+            const [nameValue] = cookie.split(';');
+            const [name, value] = nameValue.split('=');
+            if (name && value) {
+              newCookies.push({ name: name.trim(), value: value.trim() });
+            }
+          }
+        }
       }
     } catch {
       isAuthenticated = false;
@@ -48,8 +59,8 @@ export async function proxy(request: NextRequest) {
 
   const response = NextResponse.next();
 
-  if (newCookieHeader) {
-    response.headers.set('set-cookie', newCookieHeader);
+  for (const { name, value } of newCookies) {
+    response.cookies.set(name, value);
   }
 
   return response;
@@ -60,5 +71,4 @@ export { proxy as middleware };
 export const config = {
   matcher: ['/profile/:path*', '/notes/:path*', '/sign-in', '/sign-up'],
 };
-
   
