@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 const privateRoutes = ['/profile', '/notes'];
 const publicRoutes = ['/sign-in', '/sign-up'];
@@ -9,8 +10,9 @@ export async function proxy(request: NextRequest) {
   const isPrivate = privateRoutes.some((route) => pathname.startsWith(route));
   const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
 
-  const accessToken = request.cookies.get('accessToken')?.value;
-  const refreshToken = request.cookies.get('refreshToken')?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken')?.value;
+  const refreshToken = cookieStore.get('refreshToken')?.value;
 
   let isAuthenticated = false;
   let newCookieHeader: string | null = null;
