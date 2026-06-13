@@ -1,20 +1,14 @@
 import { cookies } from 'next/headers';
 import api from './api';
 import { User } from '@/types/user';
+import type { Note } from '@/types/note';
+import type { AxiosResponse } from 'axios';
 
 interface FetchNotesParams {
   page?: number;
   perPage?: number;
   search?: string;
   tag?: string;
-}
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  tag: string;
-  createdAt: string;
 }
 
 interface NotesResponse {
@@ -57,13 +51,13 @@ export async function getMe(): Promise<User> {
   return data;
 }
 
-export async function checkSession(): Promise<User | null> {
+export async function checkSession(): Promise<AxiosResponse | null> {
   try {
     const cookieHeader = await getCookieHeader();
-    const { data } = await api.get('/auth/session', {
+    const response = await api.get('/auth/session', {
       headers: { Cookie: cookieHeader },
     });
-    return data || null;
+    return response;
   } catch {
     return null;
   }

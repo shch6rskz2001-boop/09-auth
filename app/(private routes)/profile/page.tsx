@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getMe } from '@/lib/api/serverApi';
+import { redirect } from 'next/navigation';
 import css from './page.module.css';
 
 export const metadata: Metadata = {
@@ -9,16 +11,23 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  const user = await getMe();
+  let user;
+  try {
+    user = await getMe();
+  } catch {
+    redirect('/sign-in');
+  }
+
+  if (!user) redirect('/sign-in');
 
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
         <div className={css.header}>
           <h1 className={css.formTitle}>Profile Page</h1>
-          <a href="/profile/edit" className={css.editProfileButton}>
+          <Link href="/profile/edit" className={css.editProfileButton}>
             Edit Profile
-          </a>
+          </Link>
         </div>
         <div className={css.avatarWrapper}>
           <Image

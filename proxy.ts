@@ -9,21 +9,31 @@ export async function proxy(request: NextRequest) {
   const isPrivate = privateRoutes.some((route) => pathname.startsWith(route));
   const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
 
-  const cookieHeader = request.headers.get('cookie') ?? '';
+  const accessToken = request.cookies.get('accessToken')?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
 
   let isAuthenticated = false;
+  let newCookieHeader: string | null = null;
 
-  try {
-    const baseURL = process.env.NEXT_PUBLIC_API_URL + '/api';
-    const response = await fetch(`${baseURL}/auth/session`, {
-      headers: { Cookie: cookieHeader },
-    });
-    if (response.ok) {
-      const data = await response.json().catch(() => null);
-      isAuthenticated = !!data;
+  if (accessToken) {
+    isAuthenticated = true;
+  } else if (refreshToken) {
+    try {
+      const baseURL = process.env.NEXT_PUBLIC_API_URL + '/api';
+      const response = await fetch(`${baseURL}/auth/session`, {
+        headers: {
+          Cookie: `refreshToken=${refreshToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json().catch(() => null);
+        isAuthenticated = !!data;
+        newCookieHeader = response.headers.get('set-cookie');
+      }
+    } catch {
+      isAuthenticated = false;
     }
-  } catch {
-    isAuthenticated = false;
   }
 
   if (isPrivate && !isAuthenticated) {
@@ -31,16 +41,22 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isPublic && isAuthenticated) {
-    return NextResponse.redirect(new URL('/profile', request.url));
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  if (newCookieHeader) {
+    response.headers.set('set-cookie', newCookieHeader);
+  }
+
+  return response;
 }
 
 export { proxy as middleware };
 
 export const config = {
   matcher: ['/profile/:path*', '/notes/:path*', '/sign-in', '/sign-up'],
-}; 
+};
 
   
