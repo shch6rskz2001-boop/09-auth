@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { checkSession } from '@/lib/api/serverApi';
 
 const privateRoutes = ['/profile', '/notes'];
 const publicRoutes = ['/sign-in', '/sign-up'];
@@ -7,8 +8,12 @@ const publicRoutes = ['/sign-in', '/sign-up'];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isPrivate = privateRoutes.some((route) => pathname.startsWith(route));
-  const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
+  const isPrivate = privateRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+  const isPublic = publicRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken')?.value;
@@ -21,25 +26,23 @@ export async function proxy(request: NextRequest) {
     isAuthenticated = true;
   } else if (refreshToken) {
     try {
-      const baseURL = process.env.NEXT_PUBLIC_API_URL + '/api';
-      const response = await fetch(`${baseURL}/auth/session`, {
-        headers: {
-          Cookie: `refreshToken=${refreshToken}`,
-        },
-      });
+      const response = await checkSession();
 
-      if (response.ok) {
-        const data = await response.json().catch(() => null);
-        isAuthenticated = !!data;
+      if (response) {
+        isAuthenticated = true;
 
-        const setCookieHeader = response.headers.get('set-cookie');
+        const setCookieHeader = response.headers['set-cookie'];
+
         if (setCookieHeader) {
-          const cookiePairs = setCookieHeader.split(',').map((c) => c.trim());
-          for (const cookie of cookiePairs) {
+          for (const cookie of setCookieHeader) {
             const [nameValue] = cookie.split(';');
             const [name, value] = nameValue.split('=');
+
             if (name && value) {
-              newCookies.push({ name: name.trim(), value: value.trim() });
+              newCookies.push({
+                name: name.trim(),
+                value: value.trim(),
+              });
             }
           }
         }
